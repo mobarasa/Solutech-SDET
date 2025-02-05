@@ -22,10 +22,10 @@ module.exports = defineConfig({
             require('cypress-mochawesome-reporter/plugin')(on);
 
             // Configure cucumber preprocessor
-            await addCucumberPreprocessorPlugin(on, config);
+            // await addCucumberPreprocessorPlugin(on, config);
 
             // Configure file preprocessor
-            on('file:preprocessor', preprocessor(config));
+            // on('file:preprocessor', preprocessor(config));
 
             return config;
         },

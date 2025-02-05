@@ -1,0 +1,124 @@
+# .github/workflows/cypress-tests.yml
+name: Cypress Tests
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+  push:
+    branches: [ main, develop ]
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: laravel_test
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, dom, fileinfo, mysql
+          coverage: none
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Copy .env file
+        run: cp .env.example .env
+
+      - name: Install PHP Dependencies
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+      - name: Generate key
+        run: php artisan key:generate
+
+      - name: Configure Database
+        env:
+          DB_CONNECTION: mysql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_DATABASE: laravel_test
+          DB_USERNAME: root
+          DB_PASSWORD: password
+        run: |
+          php artisan migrate --force
+          php artisan db:seed --force
+
+      - name: Install NPM dependencies
+        run: npm ci
+
+      - name: Build assets
+        run: npm run build
+
+      - name: Start Laravel Server
+        run: php artisan serve &
+        env:
+          APP_ENV: testing
+          APP_URL: http://127.0.0.1:8000
+
+      - name: Run Cypress Tests
+        uses: cypress-io/github-action@v6
+        with:
+          browser: chrome
+          build: npm run build
+          start: npm run cy:run
+          wait-on: 'http://127.0.0.1:8000'
+        env:
+          CYPRESS_baseUrl: http://127.0.0.1:8000
+
+      - name: Generate Test Report
+        if: always()
+        run: |
+          npm install -g mochawesome-merge mochawesome-report-generator
+          npx mochawesome-merge cypress/reports/*.json > cypress/reports/combined.json
+          npx mochawesome-report-generator cypress/reports/combined.json --reportDir cypress/reports
+
+      - name: Upload Test Results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: cypress-test-results
+          path: cypress/reports
+
+      - name: Comment PR with Test Results
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            try {
+              const report = JSON.parse(fs.readFileSync('cypress/reports/combined.json'));
+              const stats = report.stats;
+              const comment = `## Cypress Test Results
+              ✅ Passed: ${stats.passes}
+              ❌ Failed: ${stats.failures}
+              ⏱️ Duration: ${Math.round(stats.duration / 1000)}s
+              📊 Total: ${stats.tests}
+
+              [Detailed Report](${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID})`;
+
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: comment
+              });
+            } catch (error) {
+              console.error('Error creating test report comment:', error);
+            }
