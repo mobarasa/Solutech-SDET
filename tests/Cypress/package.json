@@ -10,9 +10,10 @@
     "license": "ISC",
     "description": "",
     "devDependencies": {
-        "@cypress/code-coverage": "^3.13.11",
+        "@badeball/cypress-cucumber-preprocessor": "^22.0.0",
+        "@bahmutov/cypress-esbuild-preprocessor": "^2.2.4",
         "cypress": "^14.0.1",
-        "istanbul-lib-coverage": "^3.2.2",
-        "nyc": "^17.1.0"
+        "cypress-mochawesome-reporter": "^3.8.2",
+        "esbuild": "^0.24.2"
     }
 }
