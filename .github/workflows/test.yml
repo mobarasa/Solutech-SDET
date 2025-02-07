@@ -67,20 +67,20 @@ jobs:
           sudo chown -R runner:runner .
 
           # Install PHP dependencies
-          composer install --no-interaction --prefer-dist
+          docker-compose exec -T php-fpm composer install --no-interaction --prefer-dist
 
           # Install JavaScript dependencies
-          npm install
+          docker-compose exec -T php-fpm npm install
 
           # Set up environment variables
-          cp .env.example .env
-          php artisan key:generate
+          docker-compose exec -T php-fpm cp .env.example .env
+          docker-compose exec -T php-fpm php artisan key:generate
 
           # Set up the database
-          php artisan migrate:fresh --seed
+          docker-compose exec -T php-fpm php artisan migrate:fresh --seed
 
           # Compile assets
-          npm run build
+          docker-compose exec -T php-fpm npm run build
 
       - name: Run Cypress tests using Cypress Docker image
         run: |
