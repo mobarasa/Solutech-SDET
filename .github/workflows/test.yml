@@ -51,6 +51,11 @@ jobs:
           ./build.sh
           ./start.sh
 
+      - name: Wait for MySQL to be ready
+        run: |
+          cd docker
+          docker-compose exec -T mysql bash -c 'while ! mysqladmin ping -h mysql --silent; do sleep 1; done'
+
       - name: Configure application container and seed database
         run: |
           cd docker
