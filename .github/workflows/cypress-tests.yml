@@ -1,5 +1,4 @@
-# .github/workflows/cypress-tests.yml
-name: Cypress Tests
+name: Cypress Tests in Docker
 
 on:
   pull_request:
@@ -11,75 +10,50 @@ jobs:
   cypress-run:
     runs-on: ubuntu-latest
 
-    services:
-      mysql:
-        image: mysql:8.0
-        env:
-          MYSQL_ROOT_PASSWORD: password
-          MYSQL_DATABASE: laravel_test
-        ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.2'
-          extensions: mbstring, dom, fileinfo, mysql
-          coverage: none
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-          cache: 'npm'
-
-      - name: Copy .env file
-        run: cp .env.example .env
-
-      - name: Install PHP Dependencies
-        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
-
-      - name: Generate key
-        run: php artisan key:generate
-
-      - name: Configure Database
-        env:
-          DB_CONNECTION: mysql
-          DB_HOST: 127.0.0.1
-          DB_PORT: 3306
-          DB_DATABASE: laravel_test
-          DB_USERNAME: root
-          DB_PASSWORD: password
+      - name: Set up Docker permissions
         run: |
-          php artisan migrate --force
-          php artisan db:seed --force
+          sudo chmod +x docker/*.sh
+          sudo chmod +x docker/setup/setup.sh
 
-      - name: Install NPM dependencies
-        run: npm ci
+      - name: Build and start containers
+        run: |
+          cd docker
+          ./build.sh
+          ./start.sh
 
-      - name: Build assets
-        run: npm run build
+      - name: Set file permissions inside the container
+        run: docker-compose exec booking-php-fpm chown -R www-data:www-data ./public
 
-      - name: Start Laravel Server
-        run: php artisan serve &
-        env:
-          APP_ENV: testing
-          APP_URL: http://127.0.0.1:8000
+      - name: Install dependencies inside the container
+        run: |
+          docker-compose exec booking-php-fpm composer install
+          docker-compose exec booking-php-fpm npm install
+          docker-compose exec booking-php-fpm npm run build
 
-      - name: Run Cypress Tests
+      - name: Configure environment and database
+        run: |
+          docker-compose exec booking-php-fpm cp .env.example .env
+          docker-compose exec booking-php-fpm php artisan key:generate
+          docker-compose exec booking-php-fpm php artisan migrate:fresh --seed
+
+      - name: Wait for Laravel to be ready
+        run: |
+          echo "Waiting for Laravel to be ready..."
+          sleep 10 # Adjust if necessary
+          curl --retry 10 --retry-delay 5 --retry-connrefused -I http://localhost:8000 || exit 1
+
+      - name: Run Cypress tests
         uses: cypress-io/github-action@v6
         with:
+          start: "docker-compose up -d"
+          wait-on: "http://localhost:8000"
           browser: chrome
-          build: npm run build
-          start: npm run cy:run
-          wait-on: 'http://127.0.0.1:8000'
-        env:
-          CYPRESS_baseUrl: http://127.0.0.1:8000
+          env: MOCHAWESOME_REPORT_DIR=cypress/reports
+          config-file: cypress.json
 
       - name: Generate Test Report
         if: always()
@@ -114,7 +88,7 @@ jobs:
               [Detailed Report](${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID})`;
 
               github.rest.issues.createComment({
-                issue_number: context.issue.number,
+                issue_number: context.payload.pull_request.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 body: comment
@@ -122,3 +96,9 @@ jobs:
             } catch (error) {
               console.error('Error creating test report comment:', error);
             }
+
+      - name: Stop containers
+        if: always()
+        run: |
+          cd docker
+          ./stop.sh
