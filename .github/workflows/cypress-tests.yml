@@ -25,11 +25,6 @@ jobs:
           sudo chmod +x /usr/local/bin/docker-compose
           docker-compose version
 
-      - name: Set up Docker permissions
-        run: |
-          sudo chmod +x docker/*.sh
-          sudo chmod +x docker/setup/setup.sh
-
       - name: Build and start containers
         run: |
           docker-compose build
@@ -40,43 +35,35 @@ jobs:
       - name: Check container status
         run: |
           docker-compose ps
-          docker-compose logs booking-php-fpm
+          docker logs booking-php-fpm
 
-      - name: Wait for PHP-FPM to be ready
+      - name: Wait for services to be ready
         run: |
-          attempt_counter=0
-          max_attempts=10
-
-          until docker-compose exec -T booking-php-fpm php-fpm -v > /dev/null 2>&1; do
-            if [ ${attempt_counter} -eq ${max_attempts} ];then
-              echo "Max attempts reached. PHP-FPM container is not ready"
-              exit 1
-            fi
-
-            attempt_counter=$(($attempt_counter+1))
-            echo "Waiting for PHP-FPM to be ready... (Attempt: $attempt_counter)"
+          echo "Checking PHP-FPM container..."
+          until docker exec booking-php-fpm php-fpm -v > /dev/null 2>&1; do
+            echo "Waiting for PHP-FPM to be ready..."
             sleep 5
           done
 
       - name: Set file permissions inside the container
-        run: docker-compose exec -T booking-php-fpm chown -R www-data:www-data /application/public
+        run: docker exec booking-php-fpm chown -R www-data:www-data /application/public
 
       - name: Install dependencies inside the container
         run: |
-          docker-compose exec -T booking-php-fpm composer install
-          docker-compose exec -T booking-php-fpm npm install
-          docker-compose exec -T booking-php-fpm npm run build
+          docker exec booking-php-fpm composer install
+          docker exec booking-php-fpm npm install
+          docker exec booking-php-fpm npm run build
 
       - name: Configure environment and database
         run: |
-          docker-compose exec -T booking-php-fpm cp .env.example .env
-          docker-compose exec -T booking-php-fpm php artisan key:generate
-          docker-compose exec -T booking-php-fpm php artisan migrate:fresh --seed
+          docker exec booking-php-fpm cp .env.example .env
+          docker exec booking-php-fpm php artisan key:generate
+          docker exec booking-php-fpm php artisan migrate:fresh --seed
 
       - name: Wait for Laravel to be ready
         run: |
           echo "Waiting for Laravel to be ready..."
-          sleep 10 # Adjust if necessary
+          sleep 10
           curl --retry 10 --retry-delay 5 --retry-connrefused -I http://localhost:8000 || exit 1
 
       - name: Run Cypress tests
@@ -104,6 +91,4 @@ jobs:
 
       - name: Stop containers
         if: always()
-        run: |
-          cd docker
-          ./stop.sh
+        run: docker-compose down
