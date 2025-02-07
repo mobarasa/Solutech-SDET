@@ -35,11 +35,10 @@ jobs:
           cd docker
           ./build.sh
           ./start.sh
-          sleep 5  # Give containers time to initialize
-          echo "Checking container statuses..."
-          docker ps -a  # ✅ List all containers
-          echo "Checking php-fpm logs..."
-          docker logs booking-php-fpm || echo "No logs available"
+          echo "Waiting for containers to be ready..."
+          sleep 30
+          docker ps
+          docker-compose ps
 
       - name: Debug php-fpm inside the container
         run: |
