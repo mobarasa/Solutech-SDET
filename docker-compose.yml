@@ -17,18 +17,19 @@ services:
             - mysql
             - redis
             - mailhog
+
     php-fpm:
         container_name: booking-php-fpm
         build: docker/php-fpm
         working_dir: /application
-        command: /usr/local/sbin/php-fpm
+        command: /usr/local/bin/php-fpm -F
         volumes:
             - '.:/application'
             - './docker/php-fpm/php-ini-overrides.ini:/etc/php/8.2/fpm/conf.d/99-overrides.ini'
             - './docker/php-fpm/php-ini-overrides.ini:/etc/php/8.2/cli/conf.d/99-overrides.ini'
             - './docker/setup:/setup'
         healthcheck:
-            test: ["CMD", "/usr/local/sbin/php-fpm", "-t"]
+            test: ["CMD", "/usr/local/bin/php-fpm", "-t"]
             interval: 5s
             retries: 3
             start_period: 10s

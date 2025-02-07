@@ -1,10 +1,8 @@
 FROM phpdockerio/php:8.2-fpm
 WORKDIR "/application"
 
-# Ensure php-fpm is installed
 RUN apt-get update \
     && apt-get -y --no-install-recommends install \
-        php8.2-fpm \
         git \
         php8.2-bcmath \
         php8.2-bz2 \
@@ -20,5 +18,6 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
-# Ensure proper permissions
-RUN chmod 755 /usr/local/sbin/php-fpm
+# Find php-fpm location and create symlink
+RUN which php-fpm && \
+    ln -s $(which php-fpm) /usr/local/bin/php-fpm
