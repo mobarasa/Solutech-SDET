@@ -39,6 +39,17 @@ jobs:
           sleep 30
           docker ps
           docker-compose ps
+          
+      - name: Debug containers
+        run: |
+          docker ps -a
+          echo "Docker compose status:"
+          docker-compose ps
+          echo "PHP-FPM container logs:"
+          docker logs booking-php-fpm || true
+          echo "Network info:"
+          docker network ls
+          docker inspect booking-php-fpm || true
 
       - name: Debug php-fpm inside the container
         run: |
