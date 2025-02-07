@@ -39,7 +39,7 @@ jobs:
           sleep 30
           docker ps
           docker-compose ps
-          
+
       - name: Debug containers
         run: |
           docker ps -a
@@ -59,7 +59,8 @@ jobs:
 
       - name: Set file permissions inside the container
         run: |
-          docker-compose exec booking-php-fpm sh -c "chown -R www-data:www-data ./public"
+          cd /home/runner/work/Solutech-SDET/Solutech-SDET
+          docker-compose exec -T booking-php-fpm chown -R www-data:www-data ./public
 
       - name: Install dependencies inside the container
         run: |
