@@ -2,11 +2,9 @@ name: Run E2E Tests with Docker
 
 on:
   push:
-    branches:
-      - main  # Trigger workflow on push to the main branch
+    branches: [ master, develop ]
   pull_request:
-    branches:
-      - main  # Trigger workflow on pull requests to the main branch
+    branches: [ master, develop ]
 
 jobs:
   test:
