@@ -1,38 +1,40 @@
 <template>
     <AppLayout title="Dashboard" class="pb-4">
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight" data-cy="page-title">
                 Tours
             </h2>
         </template>
-        <div class="mt-2  md:mx-16">
+        <div class="mt-2  md:mx-16" data-cy="tour-container">
             <div class="grid grid-cols-12 gap-8 mb-2">
                 <div class="mt-2 col-span-6 sm:col-span-12 md:col-span-4 gap-4 justify-end">
-                    <Button :size="'large'" type="primary" @click="modal_status = true">Create Tour</Button>
+                    <Button :size="'large'" type="primary" @click="modal_status = true" data-cy="create-tour-button">
+                        Create Tour
+                    </Button>
                 </div>
             </div>
-            <Table ref="table" size="default" :columns="columns" stripe :data="tours.data" border>
+            <Table ref="table" size="default" :columns="columns" stripe :data="tours.data" border data-cy="tour-table">
                 <template #action="{ row, index }">
-                    <Icon class="cursor-pointer" color="green" size="28" @click="showTourEditModal(row)" type="ios-create" />
-                    <Icon class="cursor-pointer" color="red" size="28" @click="deleteRow(row)" type="md-trash" />
+                    <Icon class="cursor-pointer" color="green" size="28" @click="showTourEditModal(row)" type="ios-create" data-cy="edit-tour-icon" />
+                    <Icon class="cursor-pointer" color="red" size="28" @click="deleteRow(row)" type="md-trash" data-cy="delete-tour-icon" />
                 </template>
             </Table>
         </div>
-        <div class="flex justify-center mt-4">
+        <div class="flex justify-center mt-4" data-cy="pagination-container">
             <div class="flex gap-4">
                 <Button v-if="tours.prev_page_url" type="primary"
-                        @click="goToPage(tours.prev_page_url)">
+                        @click="goToPage(tours.prev_page_url)" data-cy="previous-page-button">
                     Previous Page
                 </Button>
                 <Button v-if="tours.first_page_url" type="primary"
-                        @click="goToPage(tours.first_page_url)">
+                        @click="goToPage(tours.first_page_url)" data-cy="first-page-button">
                     First Page
                 </Button>
-                <Button type="default" disabled>
+                <Button type="default" disabled data-cy="current-page-indicator">
                     On Page {{ tours.current_page }}
                 </Button>
                 <Button v-if="tours.next_page_url" type="primary"
-                        @click="goToPage(tours.next_page_url)">
+                        @click="goToPage(tours.next_page_url)" data-cy="next-page-button">
                     Next Page
                 </Button>
             </div>
@@ -44,40 +46,47 @@
         width="400"
         :closable="false"
         :styles="styles"
+        data-cy="tour-drawer"
     >
         <template #header>
             <div class="grid grid-cols-2">
-                <p class="text-lg font-semibold">{{edit_mode ? "Edit Tour" : "Create Tour"}}</p>
+                <p class="text-lg font-semibold" data-cy="drawer-title">
+                    {{edit_mode ? "Edit Tour" : "Create Tour"}}
+                </p>
             </div>
         </template>
-        <Form >
+        <Form data-cy="tour-form">
             <FormItem label="Tour name">
-                <Input type="text" v-model="tour.name" placeholder="Enter tour name">
+                <Input type="text" v-model="tour.name" placeholder="Enter tour name" data-cy="tour-name-input">
                 </Input>
             </FormItem>
             <FormItem label="Description">
-                <Input type="text" v-model="tour.description" placeholder="Enter Tour description">
+                <Input type="text" v-model="tour.description" placeholder="Enter Tour description" data-cy="tour-description-input">
                 </Input>
             </FormItem>
 
             <FormItem label="Choose Destination">
-                <Select placeholder="Choose Destination" v-model="tour.destination_id">
-                    <Option v-for="item in destinations" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                <Select placeholder="Choose Destination" v-model="tour.destination_id" data-cy="tour-destination-select">
+                    <Option v-for="item in destinations" :value="item.id" :key="item.id" data-cy="tour-destination-option">
+                        {{ item.name }}
+                    </Option>
                 </Select>
             </FormItem>
 
             <FormItem label="Price Per Slot">
-                <Input type="number" v-model="tour.price" placeholder="Enter the price per slot">
+                <Input type="number" v-model="tour.price" placeholder="Enter the price per slot" data-cy="tour-price-input">
                 </Input>
             </FormItem>
             <FormItem label="Slots Available">
-                <Input type="number" v-model="tour.slots" placeholder="Enter the number of slots available">
+                <Input type="number" v-model="tour.slots" placeholder="Enter the number of slots available" data-cy="tour-slots-input">
                 </Input>
             </FormItem>
         </Form>
-        <div class="demo-drawer-footer">
-            <Button style="margin-right: 8px" @click="modal_status = false">Cancel</Button>
-            <Button :disabled="modal_loading" type="primary" @click="store">{{modal_loading ? "Submitting..." : "Submit"}}</Button>
+        <div class="demo-drawer-footer" data-cy="drawer-footer">
+            <Button style="margin-right: 8px" @click="modal_status = false" data-cy="cancel-button">Cancel</Button>
+            <Button :disabled="modal_loading" type="primary" @click="store" data-cy="submit-button">
+                {{modal_loading ? "Submitting..." : "Submit"}}
+            </Button>
         </div>
 
     </Drawer>

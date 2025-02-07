@@ -1,34 +1,34 @@
 <template>
     <AppLayout title="Tickets">
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight" data-cy="page-title">
                 Tickets
             </h2>
         </template>
 
-        <div class="py-12">
+        <div class="py-12" data-cy="tickets-container">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
-                    <Table :no-data-text="'No data'" :columns="columns" :data="tickets.data">
+                    <Table :no-data-text="'No data'" :columns="columns" :data="tickets.data" data-cy="tickets-table">
                     </Table>
                 </div>
             </div>
         </div>
-        <div class="flex justify-center mt-2">
+        <div class="flex justify-center mt-2" data-cy="pagination-container">
             <div class="flex gap-4">
                 <Button v-if="tickets.prev_page_url" type="primary"
-                        @click="goToPage(tickets.prev_page_url)">
+                        @click="goToPage(tickets.prev_page_url)" data-cy="previous-page-button">
                     Previous Page
                 </Button>
                 <Button v-if="tickets.first_page_url" type="primary"
-                        @click="goToPage(tickets.first_page_url)">
+                        @click="goToPage(tickets.first_page_url)" data-cy="first-page-button">
                     First Page
                 </Button>
-                <Button type="default" disabled>
+                <Button type="default" disabled data-cy="current-page-indicator">
                     On Page {{ tickets.current_page }}
                 </Button>
                 <Button v-if="tickets.next_page_url" type="primary"
-                        @click="goToPage(tickets.next_page_url)">
+                        @click="goToPage(tickets.next_page_url)" data-cy="next-page-button">
                     Next Page
                 </Button>
             </div>

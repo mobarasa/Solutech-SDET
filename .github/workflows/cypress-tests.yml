@@ -3,9 +3,9 @@ name: Cypress Tests
 
 on:
   pull_request:
-    branches: [ main, develop ]
+    branches: [ master, develop ]
   push:
-    branches: [ main, develop ]
+    branches: [ master, develop ]
 
 jobs:
   cypress-run:

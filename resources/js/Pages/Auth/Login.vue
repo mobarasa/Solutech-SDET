@@ -37,11 +37,11 @@ const submit = () => {
             <AuthenticationCardLogo />
         </template>
 
-        <div v-if="status" class="mb-4 font-medium text-sm text-green-600 dark:text-green-400">
+        <div v-if="status" class="mb-4 font-medium text-sm text-green-600 dark:text-green-400" data-cy="login-status">
             {{ status }}
         </div>
 
-        <form @submit.prevent="submit">
+        <form @submit.prevent="submit" data-cy="login-form">
             <div>
                 <InputLabel for="email" value="Email" />
                 <TextInput
@@ -52,8 +52,9 @@ const submit = () => {
                     required
                     autofocus
                     autocomplete="username"
+                    data-cy="login-email"
                 />
-                <InputError class="mt-2" :message="form.errors.email" />
+                <InputError class="mt-2" :message="form.errors.email" data-cy="login-email-error" />
             </div>
 
             <div class="mt-4">
@@ -65,13 +66,14 @@ const submit = () => {
                     class="mt-1 block w-full"
                     required
                     autocomplete="current-password"
+                    data-cy="login-password"
                 />
-                <InputError class="mt-2" :message="form.errors.password" />
+                <InputError class="mt-2" :message="form.errors.password" data-cy="login-password-error" />
             </div>
 
             <div class="block mt-4">
                 <label class="flex items-center">
-                    <Checkbox v-model:checked="form.remember" name="remember" />
+                    <Checkbox v-model:checked="form.remember" name="remember" data-cy="login-remember" />
                     <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">Remember me</span>
                 </label>
             </div>
@@ -81,6 +83,7 @@ const submit = () => {
                     v-if="canResetPassword"
                     :href="route('password.request')"
                     class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
+                    data-cy="forgot-password"
                 >
                     Forgot your password?
                 </Link>
@@ -89,6 +92,7 @@ const submit = () => {
                     class="ms-4"
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
+                    data-cy="login-submit"
                 >
                     Log in
                 </PrimaryButton>

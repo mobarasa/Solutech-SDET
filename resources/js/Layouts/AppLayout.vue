@@ -48,27 +48,27 @@ const logout = () => {
 
                             <!-- Navigation Links -->
                             <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
+                                <NavLink :href="route('dashboard')" :active="route().current('dashboard')" data-cy="dashboard-navigation-link">
                                     Dashboard
                                 </NavLink>
                             </div>
                             <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink :href="route('bookings.index')" :active="route().current('bookings.index')">
+                                <NavLink :href="route('bookings.index')" :active="route().current('bookings.index')" data-cy="bookings-navigation-link">
                                     Bookings
                                 </NavLink>
                             </div>
                             <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink :href="route('tickets.index')" :active="route().current('tickets.index')">
+                                <NavLink :href="route('tickets.index')" :active="route().current('tickets.index')" data-cy="tickets-navigation-link">
                                     Tickets
                                 </NavLink>
                             </div>
                             <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink :href="route('destinations.index')" :active="route().current('destinations.index')">
+                                <NavLink :href="route('destinations.index')" :active="route().current('destinations.index')" data-cy="destinations-navigation-link">
                                     Destinations
                                 </NavLink>
                             </div>
                             <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink :href="route('tours.index')" :active="route().current('tours.index')">
+                                <NavLink :href="route('tours.index')" :active="route().current('tours.index')" data-cy="tours-navigation-link">
                                     Tours
                                 </NavLink>
                             </div>
@@ -158,7 +158,7 @@ const logout = () => {
                                             Manage Account
                                         </div>
 
-                                        <DropdownLink :href="route('profile.show')">
+                                        <DropdownLink :href="route('profile.show')" data-cy="profile-navigation-link">
                                             Profile
                                         </DropdownLink>
 
@@ -170,7 +170,7 @@ const logout = () => {
 
                                         <!-- Authentication -->
                                         <form @submit.prevent="logout">
-                                            <DropdownLink as="button">
+                                            <DropdownLink as="button" data-cy="logout-navigation-link">
                                                 Log Out
                                             </DropdownLink>
                                         </form>

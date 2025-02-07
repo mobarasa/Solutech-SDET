@@ -1,0 +1,27 @@
+{
+    "validTours": {
+        "basicTour": {
+            "name": "Weekend Getaway",
+            "description": "A relaxing weekend escape to beautiful destinations",
+            "destination": "Bali",
+            "price": 299.99,
+            "slots": 20
+        },
+        "localTour": {
+            "name": "Forest Adventure",
+            "description": "Explore the natural beauty of local forests",
+            "destination": "Kakamega",
+            "price": 149.99,
+            "slots": 15
+        }
+    },
+    "invalidTours": {
+        "emptyName": {
+            "name": "",
+            "description": "Test tour with empty name",
+            "destination": "Bali",
+            "price": 199.99,
+            "slots": 10
+        }
+    }
+}

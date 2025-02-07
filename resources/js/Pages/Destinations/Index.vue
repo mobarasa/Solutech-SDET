@@ -1,38 +1,40 @@
 <template>
     <AppLayout title="Dashboard" class="pb-4">
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight" data-cy="page-title">
                 Destinations
             </h2>
         </template>
-        <div class="mt-2  md:mx-16">
+        <div class="mt-2  md:mx-16" data-cy="destination-container">
             <div class="grid grid-cols-12 gap-8 mb-2">
                 <div class="mt-2 col-span-6 sm:col-span-12 md:col-span-4 gap-4 justify-end">
-                    <Button :size="'large'" type="primary" @click="modal_status = true">Create Destination</Button>
+                    <Button :size="'large'" type="primary" @click="modal_status = true" data-cy="create-destination-button">
+                        Create Destination
+                    </Button>
                 </div>
             </div>
-            <Table ref="table" size="default" :columns="columns" stripe :data="destinations.data" border>
+            <Table ref="table" size="default" :columns="columns" stripe :data="destinations.data" border data-cy="destination-table">
                 <template #action="{ row, index }">
-                    <Icon class="cursor-pointer" color="green" size="28" @click="showDestinationEditModal(row)" type="ios-create" />
-                    <Icon class="cursor-pointer" color="red" size="28" @click="deleteRow(row)" type="md-trash" />
+                    <Icon class="cursor-pointer" color="green" size="28" @click="showDestinationEditModal(row)" type="ios-create" data-cy="edit-destination-icon" />
+                    <Icon class="cursor-pointer" color="red" size="28" @click="deleteRow(row)" type="md-trash" data-cy="delete-destination-icon" />
                 </template>
             </Table>
         </div>
-        <div class="flex justify-center mt-4">
+        <div class="flex justify-center mt-4" data-cy="pagination-container">
             <div class="flex gap-4">
                 <Button v-if="destinations.prev_page_url" type="primary"
-                        @click="goToPage(destinations.prev_page_url)">
+                        @click="goToPage(destinations.prev_page_url)" data-cy="previous-page-button">
                     Previous Page
                 </Button>
                 <Button v-if="destinations.first_page_url" type="primary"
-                        @click="goToPage(destinations.first_page_url)">
+                        @click="goToPage(destinations.first_page_url)" data-cy="first-page-button">
                     First Page
                 </Button>
-                <Button type="default" disabled>
+                <Button type="default" disabled data-cy="current-page-indicator">
                     On Page {{ destinations.current_page }}
                 </Button>
                 <Button v-if="destinations.next_page_url" type="primary"
-                        @click="goToPage(destinations.next_page_url)">
+                        @click="goToPage(destinations.next_page_url)" data-cy="next-page-button">
                     Next Page
                 </Button>
             </div>
@@ -44,25 +46,30 @@
         width="400"
         :closable="false"
         :styles="styles"
+        data-cy="destination-drawer"
     >
         <template #header>
             <div class="grid grid-cols-2">
-                <p class="text-lg font-semibold">{{edit_mode ? "Edit Destination" : "Create Destination"}}</p>
+                <p class="text-lg font-semibold" data-cy="drawer-title">
+                    {{edit_mode ? "Edit Destination" : "Create Destination"}}
+                </p>
             </div>
         </template>
-        <Form >
+        <Form data-cy="destination-form">
             <FormItem label="Destination name">
-                <Input type="text" v-model="destination.name" placeholder="Enter destination name">
+                <Input type="text" v-model="destination.name" placeholder="Enter destination name" data-cy="destination-name-input">
                 </Input>
             </FormItem>
             <FormItem label="Description">
-                <Input type="text" v-model="destination.description" placeholder="Enter Destination">
+                <Input type="text" v-model="destination.description" placeholder="Enter Destination" data-cy="destination-description-input">
                 </Input>
             </FormItem>
         </Form>
-        <div class="demo-drawer-footer">
-            <Button style="margin-right: 8px" @click="modal_status = false">Cancel</Button>
-            <Button :disabled="modal_loading" type="primary" @click="store">{{modal_loading ? "Submitting..." : "Submit"}}</Button>
+        <div class="demo-drawer-footer" data-cy="drawer-footer">
+            <Button style="margin-right: 8px" @click="modal_status = false" data-cy="cancel-button">Cancel</Button>
+            <Button :disabled="modal_loading" type="primary" @click="store" data-cy="submit-button">
+                {{modal_loading ? "Submitting..." : "Submit"}}
+            </Button>
         </div>
 
     </Drawer>

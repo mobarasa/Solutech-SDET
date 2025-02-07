@@ -120,16 +120,17 @@ export default {
             ok-text="Book Tour"
             :loading="modal_loading"
             cancel-text="Cancel"
+            data-cy="book-tour-modal"
             @on-ok="bookTour"
             @on-cancel="modal_status">
 
             <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
-                <Input size="large" class="col-span-6" v-model="booking_payload.slots" type="number" placeholder="Please enter the number of slots you are booking." />
-                <Input size="large" class="col-span-6" v-model="booking_payload.user_name" type="text" placeholder="Please enter the ticket holder name." />
-                <Input size="large" class="col-span-12" v-model="booking_payload.email_address" type="email" placeholder="Please enter your email address." />
+                <Input size="large" class="col-span-6" v-model="booking_payload.slots" type="number" placeholder="Please enter the number of slots you are booking." data-cy="input-slots" />
+                <Input size="large" class="col-span-6" v-model="booking_payload.user_name" type="text" placeholder="Please enter the ticket holder name." data-cy="input-user-name" />
+                <Input size="large" class="col-span-12" v-model="booking_payload.email_address" type="email" placeholder="Please enter your email address." data-cy="input-email-address" />
             </div>
 
-            <div class="border-2 green rounded-md p-4 mt-4">
+            <div class="border-2 green rounded-md p-4 mt-4" data-cy="total-price">
                 Total: KES {{ total_price }}
             </div>
         </Modal>
@@ -141,22 +142,23 @@ export default {
             title="Ticket Details"
             ok-text="Done"
             cancel-text="Cancel"
+            data-cy="ticket-modal"
             @on-ok="!ticket_modal">
 
             <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
                 <div class="col-span-12">
-                    <p class="text-lg font-semibold">Ticket Number: {{ ticket_number }}</p>
-                    <p class="text-lg font-semibold">Ticket Holder: {{ booking_payload.user_name }}</p>
-                    <p class="text-lg font-semibold">Email Address: {{ booking_payload.email_address }}</p>
-                    <p class="text-lg font-semibold">Tour: {{ selected_tour?.name }}</p>
-                    <p class="text-lg font-semibold">Slots: {{ booking_payload.slots }}</p>
-                    <p class="text-lg font-semibold">Total Price: KES {{ this.total_price }}</p>
+                    <p class="text-lg font-semibold" data-cy="ticket-number">Ticket Number: {{ ticket_number }}</p>
+                    <p class="text-lg font-semibold" data-cy="ticket-holder">Ticket Holder: {{ booking_payload.user_name }}</p>
+                    <p class="text-lg font-semibold" data-cy="ticket-email">Email Address: {{ booking_payload.email_address }}</p>
+                    <p class="text-lg font-semibold" data-cy="ticket-tour">Tour: {{ selected_tour?.name }}</p>
+                    <p class="text-lg font-semibold" data-cy="ticket-slots">Slots: {{ booking_payload.slots }}</p>
+                    <p class="text-lg font-semibold" data-cy="ticket-total-price">Total Price: KES {{ this.total_price }}</p>
                 </div>
             </div>
         </Modal>
 
         <div
-            class="relative min-h-screen flex flex-col items-center justify-center selection:bg-[#FF2D20] selection:text-white">
+            class="relative min-h-screen flex flex-col items-center justify-center selection:bg-[#FF2D20] selection:text-white" data-cy="page-container">
             <div class="relative w-full max-w-2xl px-6 lg:max-w-7xl">
                 <header class="grid grid-cols-2 items-center gap-2 py-10 lg:grid-cols-3">
                     <div class="flex lg:justify-center lg:col-start-2">
@@ -167,7 +169,7 @@ export default {
                                 fill="currentColor"/>
                         </svg>
 
-                        <img src="https://www.solutech.co.ke/wp-content/uploads/2020/10/Solutech-Official-Logo.svg">
+                        <img src="https://www.solutech.co.ke/wp-content/uploads/2020/10/Solutech-Official-Logo.svg" data-cy="company-logo">
 
                     </div>
                     <nav v-if="canLogin" class="-mx-3 flex flex-1 justify-end">
@@ -175,6 +177,7 @@ export default {
                             v-if="$page.props.auth.user"
                             :href="route('dashboard')"
                             class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
+                            data-cy="dashboard-link"
                         >
                             Dashboard
                         </Link>
@@ -183,6 +186,7 @@ export default {
                             <Link
                                 :href="route('login')"
                                 class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
+                                data-cy="login-link"
                             >
                                 Log in
                             </Link>
@@ -191,6 +195,7 @@ export default {
                                 href="https://bookings.test/docs/index.html"
                                 target="_blank"
                                 class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
+                                data-cy="documentation-link"
                             >
                                 Documentation
                             </a>
@@ -199,29 +204,32 @@ export default {
                     </nav>
                 </header>
 
-                <main class="min-h-96 mt-6">
+                <main class="min-h-96 mt-6" data-cy="tours-container">
 
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <template v-for="tour in tours">
-                            <div class="bg-white dark:bg-black dark:text-white/70 rounded-lg shadow-md overflow-hidden">
+                            <div class="bg-white dark:bg-black dark:text-white/70 rounded-lg shadow-md overflow-hidden" data-cy="tour-card">
                                 <div class="relative">
                                     <img
                                         src="https://fastly.picsum.photos/id/28/4928/3264.jpg?hmac=GnYF-RnBUg44PFfU5pcw_Qs0ReOyStdnZ8MtQWJqTfA"
                                         alt="Tour image"
                                         class="object-cover w-full h-48"
                                         @error="handleImageError"
+                                        data-cy="tour-image"
                                     />
                                     <div class="absolute inset-0 bg-black/50"></div>
                                     <div class="absolute inset-0 flex items-center justify-center">
                                         <button @click="showBookingModal(tour)"
-                                                class="bg-[#FF2D20] text-white px-4 py-2 rounded-lg">Book Tour
+                                                class="bg-[#FF2D20] text-white px-4 py-2 rounded-lg"
+                                                data-cy="book-tour-button">
+                                                Book Tour
                                         </button>
                                     </div>
                                 </div>
                                 <div class="p-4">
-                                    <h2 class="text-lg font-semibold">Destination: {{ tour.destination.name }}</h2>
-                                    <p class="text-sm text-gray-500">Tour name: {{ tour.name }}</p>
-                                    <p class="text-sm text-gray-500">{{ tour.slots }} slots available</p>
+                                    <h2 class="text-lg font-semibold" data-cy="tour-destination">Destination: {{ tour.destination.name }}</h2>
+                                    <p class="text-sm text-gray-500" data-cy="tour-name">Tour name: {{ tour.name }}</p>
+                                    <p class="text-sm text-gray-500" data-cy="tour-slots">{{ tour.slots }} slots available</p>
                                 </div>
                             </div>
                         </template>

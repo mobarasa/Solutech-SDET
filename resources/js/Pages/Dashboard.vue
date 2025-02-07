@@ -5,12 +5,10 @@ import Welcome from '@/Components/Welcome.vue';
 
 <template>
     <AppLayout title="Dashboard">
-        <div
-            class="rounded-md  p-1 md:p-6 mx-1 md:mx-4 lg:mx-12 my-2 mx-auto "
-        >
+        <div class="rounded-md  p-1 md:p-6 mx-1 md:mx-4 lg:mx-12 my-2 mx-auto" data-cy="dashboard-container">
             <div v-if="loaded" class="grid grid-cols-12 px-3 py-4 gap-2">
                 <div
-                    class="col-span-12 bg-[#7C6100] rounded-md  gap-2 py-[40px] px-[60px] h-[168px] group group-hover:translate-y-1 duration-1000 flex flex-col justify-center rounded-md md:col-span-3  items-center">
+                    class="col-span-12 bg-[#7C6100] rounded-md  gap-2 py-[40px] px-[60px] h-[168px] group group-hover:translate-y-1 duration-1000 flex flex-col justify-center rounded-md md:col-span-3 items-center" data-cy="total-bookings">
                     <div class="text-[18px] font-[inter] text-center  text-white font-normal"> Total Bookings</div>
                     <div class="text-3xl text-center text-white font-semibold flex flex-col">
                         <span> {{ total_bookings }}</span>
@@ -21,7 +19,7 @@ import Welcome from '@/Components/Welcome.vue';
 
 
                 <div
-                    class="col-span-12 bg-[#FFFFFF]rounded-md border border-[#2CB34A] gap-2 py-[40px] px-[60px] h-[168px] group group-hover:translate-y-1 duration-1000 flex flex-col justify-center rounded-md md:col-span-3  items-center">
+                    class="col-span-12 bg-[#FFFFFF]rounded-md border border-[#2CB34A] gap-2 py-[40px] px-[60px] h-[168px] group group-hover:translate-y-1 duration-1000 flex flex-col justify-center rounded-md md:col-span-3 items-center" data-cy="pending-bookings">
                     <div class="text-[18px] font-[inter] text-center text-[#444444] font-normal"> Pending Bookings</div>
                     <div class="text-3xl text-center text-[#188518] font-semibold flex flex-col">
                         <span>{{ pending_bookings }}</span>
@@ -31,7 +29,7 @@ import Welcome from '@/Components/Welcome.vue';
 
 
                 <div
-                    class="col-span-12 bg-[#0091D8] rounded-md  gap-2 py-[40px] px-[60px] h-[168px] group group-hover:translate-y-1 duration-1000 flex flex-col justify-center rounded-md md:col-span-3  items-center">
+                    class="col-span-12 bg-[#0091D8] rounded-md  gap-2 py-[40px] px-[60px] h-[168px] group group-hover:translate-y-1 duration-1000 flex flex-col justify-center rounded-md md:col-span-3 items-center" data-cy="confirmed-bookings">
                     <div class="text-[18px] font-inter text-center text-white font-normal"> Confirmed Bookings</div>
                     <div class="text-3xl text-center text-white font-semibold flex flex-col">
                         <span>{{ confirmed_bookings }}</span>
@@ -41,7 +39,7 @@ import Welcome from '@/Components/Welcome.vue';
 
                 </div>
                 <div
-                    class="col-span-12 bg-[#000000] rounded-md gap-2 py-[40px] px-[60px] h-[168px] group group-hover:translate-y-1 duration-1000 flex flex-col justify-center rounded-md md:col-span-3  items-center">
+                    class="col-span-12 bg-[#000000] rounded-md gap-2 py-[40px] px-[60px] h-[168px] group group-hover:translate-y-1 duration-1000 flex flex-col justify-center rounded-md md:col-span-3 items-center" data-cy="cancelled-bookings">
                     <div class="text-[17px] font-[inter] text-center text-white font-normal">Cancelled Bookings</div>
                     <div class="text-3xl text-center text-white font-semibold flex flex-col">
                         <span>{{cancelled_bookings}}</span>
@@ -50,7 +48,7 @@ import Welcome from '@/Components/Welcome.vue';
 
                 </div>
                 <div
-                    class="col-span-12 bg-[#104A66] rounded-md  gap-2 py-[40px] px-[60px] h-[168px] group group-hover:translate-y-1 duration-1000 flex flex-col justify-center rounded-md md:col-span-3  items-center">
+                    class="col-span-12 bg-[#104A66] rounded-md  gap-2 py-[40px] px-[60px] h-[168px] group group-hover:translate-y-1 duration-1000 flex flex-col justify-center rounded-md md:col-span-3 items-center" data-cy="total-tickets">
                     <div class="text-[18px] font-[inter] text-center text-white font-normal">Total Tickets</div>
                     <div class="text-[28px] whitespace-no-wrap text-center text-white font-semibold flex flex-col">
                         <text>{{total_tickets}}</text>
@@ -59,7 +57,7 @@ import Welcome from '@/Components/Welcome.vue';
 
                 </div>
                 <div
-                    class="col-span-12 bg-[#FF6F0F] rounded-md gap-2 py-[40px] px-[60px] h-[168px] group group-hover:translate-y-1 duration-1000 flex flex-col justify-center rounded-md md:col-span-3  items-center">
+                    class="col-span-12 bg-[#FF6F0F] rounded-md gap-2 py-[40px] px-[60px] h-[168px] group group-hover:translate-y-1 duration-1000 flex flex-col justify-center rounded-md md:col-span-3 items-center" data-cy="total-revenue">
                     <div class="text-[18px] font-[inter] text-center text-white font-normal">Total Revenue</div>
                     <div class="text-3xl text-center text-white font-semibold flex flex-col">
                         <span>{{ total_revenue }}</span>
@@ -68,7 +66,7 @@ import Welcome from '@/Components/Welcome.vue';
 
                 </div>
                 <div
-                    class="col-span-12 bg-[#188518] rounded-md  gap-2 py-[40px] px-[60px] h-[168px] group group-hover:translate-y-1 duration-1000 flex flex-col justify-center rounded-md md:col-span-3  items-center">
+                    class="col-span-12 bg-[#188518] rounded-md  gap-2 py-[40px] px-[60px] h-[168px] group group-hover:translate-y-1 duration-1000 flex flex-col justify-center rounded-md md:col-span-3 items-center" data-cy="total-tours">
                     <div class="text-[18px] font-[inter] text-center text-white font-normal">Total Tours</div>
                     <div class="text-3xl text-center text-white font-semibold flex flex-col">
                         <span>{{ total_tours }}</span>
@@ -77,7 +75,7 @@ import Welcome from '@/Components/Welcome.vue';
 
                 </div>
                 <div
-                    class="col-span-12 bg-[#CD0606] rounded-md gap-2 py-[40px] px-[60px] h-[168px] group group-hover:translate-y-1 duration-1000 flex flex-col justify-center rounded-md md:col-span-3  items-center">
+                    class="col-span-12 bg-[#CD0606] rounded-md gap-2 py-[40px] px-[60px] h-[168px] group group-hover:translate-y-1 duration-1000 flex flex-col justify-center rounded-md md:col-span-3 items-center" data-cy="total-destinations">
                     <div class="text-[18px] font-[inter] text-center text-white font-normal">Total Destinations</div>
                     <div class="text-3xl text-center text-white font-semibold flex flex-col">
                         <span>{{ total_destinations }}</span>
@@ -89,14 +87,14 @@ import Welcome from '@/Components/Welcome.vue';
 
                     <div
                         class="md:col-span-6 col-span-12 bg-[#07183E] rounded-md  w-gap-2 py-16 px-32 group group-hover:translate-y-1 duration-1000 flex flex-col justify-center gap-2 rounded-md sm-0 items-center">
-                        <div class="flex justify-center items-center">
+                        <div class="flex justify-center items-center" data-cy="admin-users">
                         </div>
                         <div class="text-1xl text-center text-white font-normal">Admin Users</div>
                         <div class="text-3xl text-center text-white font-semibold flex flex-col">
                             <span>{{ admin_users }}</span>
                         </div>
                     </div>
-                    <div  class="md:col-span-6 col-span-12 bg-[#07183E] rounded-md  py-16 px-32 group group-hover:translate-y-1 duration-1000 flex flex-col sm:flex-col justify-center md:gap-2 gap-1 rounded-md sm-0 items-center">
+                    <div  class="md:col-span-6 col-span-12 bg-[#07183E] rounded-md  py-16 px-32 group group-hover:translate-y-1 duration-1000 flex flex-col sm:flex-col justify-center md:gap-2 gap-1 rounded-md sm-0 items-center" data-cy="total-customers">
 
                         <div class="flex justify-center items-center">
                         </div>
@@ -113,6 +111,7 @@ import Welcome from '@/Components/Welcome.vue';
             <div
                 v-if="loading_data"
                 class="grid grid-cols-12 px-3 py-4 gap-2 justify-center align-items-center items-center "
+                data-cy="loading-spinner"
             >
                 <div class="col-col-span-12">
                     <Spin size="large" />
