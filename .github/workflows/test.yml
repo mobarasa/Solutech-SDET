@@ -20,37 +20,55 @@ jobs:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
 
-      - name: Navigate to the docker folder
-        run: cd docker
+      - name: Verify docker directory and files
+        id: verify-docker
+        run: |
+          if [ ! -d "docker" ]; then
+            echo "The 'docker' directory is missing."
+            exit 1
+          fi
+          cd docker
+          if [ ! -f "build.sh" ] || [ ! -f "start.sh" ] || [ ! -f "config.sh" ] || [ ! -f "stop.sh" ]; then
+            echo "One or more required .sh files are missing in the 'docker' directory."
+            exit 1
+          fi
 
       - name: Fix file permissions
         run: |
+          cd docker
           sudo chmod +x *.sh
           sudo chmod +x setup/setup.sh
 
       - name: Build and start Docker containers
         run: |
+          cd docker
           ./build.sh
           ./start.sh
 
       - name: Configure application container and seed database
-        run: ./config.sh
+        run: |
+          cd docker
+          ./config.sh
 
       - name: Run Cypress tests
         run: |
+          cd docker
           docker exec -it <container_name> npx cypress run  # Replace <container_name> with your container name
 
       - name: Run Cucumber tests
         run: |
+          cd docker
           docker exec -it <container_name> npm run test:cucumber  # Replace <container_name> with your container name
 
       - name: Stop Docker containers
         if: always()
-        run: ./stop.sh
+        run: |
+          cd docker
+          ./stop.sh
 
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: test-results
           path: |
