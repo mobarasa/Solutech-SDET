@@ -58,8 +58,11 @@ jobs:
 
       - name: Set up PHP and Node.js
         run: |
+          # Fix permissions for the vendor directory
+          sudo chown -R runner:runner .
+
           # Install PHP dependencies
-          composer install
+          composer install --no-interaction --prefer-dist
 
           # Install JavaScript dependencies
           npm install
