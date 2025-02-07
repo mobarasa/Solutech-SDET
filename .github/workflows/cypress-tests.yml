@@ -36,8 +36,17 @@ jobs:
           ./build.sh
           ./start.sh
 
+      - name: Wait for Docker containers to be ready
+        run: |
+          echo "Waiting for Docker containers to be fully started..."
+          sleep 10  # ✅ Adjust time if necessary
+          docker ps  # ✅ List running containers for debugging
+
       - name: Set file permissions inside the container
-        run: docker-compose exec booking-php-fpm chown -R www-data:www-data ./public
+        run: |
+          # ✅ Ensure the container is running before applying permissions
+          docker-compose ps
+          docker-compose exec booking-php-fpm sh -c "chown -R www-data:www-data ./public"
 
       - name: Install dependencies inside the container
         run: |
