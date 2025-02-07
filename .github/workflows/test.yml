@@ -56,9 +56,33 @@ jobs:
           cd docker
           ./config.sh
 
+      - name: Set up PHP and Node.js
+        run: |
+          # Navigate to the root application folder
+          cd ..
+
+          # Install PHP dependencies
+          composer install
+
+          # Install JavaScript dependencies
+          npm install
+
+          # Set up environment variables
+          cp .env.example .env
+          php artisan key:generate
+
+          # Set up the database
+          php artisan migrate:fresh --seed
+
+          # Compile assets
+          npm run build
+
       - name: Run Cypress tests using Cypress Docker image
         run: |
-          cd docker
+          # Navigate to the root application folder
+          cd ..
+
+          # Run Cypress tests
           docker run -v $(pwd):/e2e -w /e2e cypress/included:14.0.2 npx cypress run
 
       - name: Run Cucumber tests
