@@ -56,10 +56,10 @@ jobs:
           cd docker
           ./config.sh
 
-      - name: Run Cypress tests
+      - name: Run Cypress tests using Cypress Docker image
         run: |
           cd docker
-          docker exec booking-php-fpm npx cypress run  # Replace with your container name if different
+          docker run -v $(pwd):/e2e -w /e2e cypress/included:14.0.2 npx cypress run
 
       - name: Run Cucumber tests
         run: |
