@@ -21,6 +21,7 @@ services:
         container_name: booking-php-fpm
         build: docker/php-fpm
         working_dir: /application
+        command: php-fpm -F  # ✅ Keep php-fpm running in foreground for debugging
         volumes:
             - '.:/application'
             - './docker/php-fpm/php-ini-overrides.ini:/etc/php/8.4/fpm/conf.d/99-overrides.ini'
