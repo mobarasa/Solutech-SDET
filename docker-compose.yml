@@ -13,27 +13,28 @@ services:
         ports:
             - '8000:80'
         depends_on:
-            - php-fpm
-            - mysql
-            - redis
-            - mailhog
+            php-fpm:
+                condition: service_healthy
+            mysql:
+                condition: service_healthy
+            redis:
+                condition: service_healthy
 
     php-fpm:
         container_name: booking-php-fpm
         build: docker/php-fpm
         working_dir: /application
-        command: /usr/local/bin/php-fpm -F
         volumes:
             - '.:/application'
             - './docker/php-fpm/php-ini-overrides.ini:/etc/php/8.2/fpm/conf.d/99-overrides.ini'
             - './docker/php-fpm/php-ini-overrides.ini:/etc/php/8.2/cli/conf.d/99-overrides.ini'
             - './docker/setup:/setup'
         healthcheck:
-            test: ["CMD", "/usr/local/bin/php-fpm", "-t"]
-            interval: 5s
+            test: ["CMD", "php-fpm", "-t"]
+            interval: 10s
+            timeout: 5s
             retries: 3
             start_period: 10s
-            timeout: 5s
 
     mysql:
         container_name: booking-mysql
@@ -47,25 +48,29 @@ services:
             - MYSQL_DATABASE=booking
             - MYSQL_USER=booking
             - MYSQL_PASSWORD=secret@santa
-#        ports:
-#            - '3306:3306'
+        healthcheck:
+            test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
+            interval: 10s
+            timeout: 5s
+            retries: 3
+            start_period: 30s
 
     redis:
         container_name: booking-redis
         image: redis:alpine
         restart: unless-stopped
-#        ports:
-#            - "6379:6379"
+        healthcheck:
+            test: ["CMD", "redis-cli", "ping"]
+            interval: 10s
+            timeout: 5s
+            retries: 3
 
-#for development only
     mailhog:
         container_name: booking-mailhog
         image: 'mailhog/mailhog:latest'
         ports:
             - '8001:8025'
-#            - '1025:1025'
 
-    # DB access via PHP my admin
     phpmyadmin:
         image: phpmyadmin
         container_name: booking-phpmyadmin
@@ -75,7 +80,7 @@ services:
         ports:
             - '8002:80'
         depends_on:
-            - php-fpm
             - mysql
+
 volumes:
     booking-data:
