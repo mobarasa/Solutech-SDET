@@ -82,6 +82,11 @@ jobs:
           # Compile assets
           docker-compose exec -T php-fpm npm run build
 
+      - name: Install Cypress dependencies
+        run: |
+          cd docker
+          docker-compose exec -T php-fpm npm install cypress-multi-reporters --save-dev
+
       - name: Wait for application server to be ready
         run: |
           cd docker
