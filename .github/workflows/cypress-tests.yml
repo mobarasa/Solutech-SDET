@@ -41,27 +41,15 @@ jobs:
           echo "Checking php-fpm logs..."
           docker logs booking-php-fpm || echo "No logs available"
 
-      - name: Wait for Docker containers to be ready
+      - name: Debug php-fpm inside the container
         run: |
-          echo "Waiting for Docker containers to be fully started..."
-          sleep 10  # ✅ Adjust time if necessary
-          docker ps  # ✅ List running containers for debugging
-
-      - name: Wait for php-fpm to be healthy
-        run: |
-            echo "Waiting for php-fpm container to be healthy..."
-            for i in {1..10}; do
-              STATUS=$(docker inspect --format "{{json .State.Health.Status }}" booking-php-fpm || echo "error")
-              echo "php-fpm status: $STATUS"
-              if [[ "$STATUS" == "\"healthy\"" ]]; then
-                echo "php-fpm is healthy!"
-                break
-              fi
-              sleep 5
-            done
+          echo "Checking if php-fpm is installed..."
+          docker-compose exec booking-php-fpm which php-fpm || echo "php-fpm not found"
+          docker-compose exec booking-php-fpm php-fpm -v || echo "php-fpm is not working"
 
       - name: Set file permissions inside the container
-        run: docker-compose exec booking-php-fpm sh -c "chown -R www-data:www-data ./public"
+        run: |
+          docker-compose exec booking-php-fpm sh -c "chown -R www-data:www-data ./public"
 
       - name: Install dependencies inside the container
         run: |
@@ -99,38 +87,10 @@ jobs:
 
       - name: Upload Test Results
         if: always()
-        uses: actions/upload-artifact@v4  # ✅ Updated from v3 to v4
+        uses: actions/upload-artifact@v4
         with:
           name: cypress-test-results
           path: cypress/reports
-
-      - name: Comment PR with Test Results
-        if: github.event_name == 'pull_request' && always()
-        uses: actions/github-script@v6
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const fs = require('fs');
-            try {
-              const report = JSON.parse(fs.readFileSync('cypress/reports/combined.json'));
-              const stats = report.stats;
-              const comment = `## Cypress Test Results
-              ✅ Passed: ${stats.passes}
-              ❌ Failed: ${stats.failures}
-              ⏱️ Duration: ${Math.round(stats.duration / 1000)}s
-              📊 Total: ${stats.tests}
-
-              [Detailed Report](${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID})`;
-
-              github.rest.issues.createComment({
-                issue_number: context.payload.pull_request.number,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                body: comment
-              });
-            } catch (error) {
-              console.error('Error creating test report comment:', error);
-            }
 
       - name: Stop containers
         if: always()
