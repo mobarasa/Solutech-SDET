@@ -4,6 +4,7 @@ WORKDIR "/application"
 RUN apt-get update \
     && apt-get -y --no-install-recommends install \
         git \
+        php8.2-fpm \
         php8.2-bcmath \
         php8.2-bz2 \
         php8.2-enchant \
@@ -18,6 +19,4 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
-# Find php-fpm location and create symlink
-RUN which php-fpm && \
-    ln -s $(which php-fpm) /usr/local/bin/php-fpm
+RUN ln -s /usr/sbin/php-fpm8.2 /usr/local/bin/php-fpm
