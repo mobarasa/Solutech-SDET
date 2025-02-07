@@ -51,10 +51,18 @@ export default defineConfig({
             // Configure cucumber preprocessor
             await addCucumberPreprocessorPlugin(on, config);
 
-            // Configure esbuild plugin
+            // Configure esbuild plugin with platform: 'node'
             on('file:preprocessor',
                 createBundler({
                     plugins: [createEsbuildPlugin(config)],
+                    define: {
+                        'process.env.NODE_ENV': '"test"'
+                    },
+                    platform: 'node', // Add this line to fix the Node.js built-in modules error
+                    target: 'node16', // Specify Node.js version
+                    mainFields: ['module', 'main'],
+                    bundle: true,
+                    logLevel: 'info'
                 })
             );
 

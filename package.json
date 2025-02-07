@@ -17,6 +17,7 @@
         "axios": "^1.6.4",
         "cypress": "^14.0.2",
         "cypress-mochawesome-reporter": "^3.8.2",
+        "cypress-multi-reporters": "^1.6.0",
         "esbuild": "^0.24.2",
         "laravel-vite-plugin": "^1.0",
         "mocha-junit-reporter": "^2.2.1",
