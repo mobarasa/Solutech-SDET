@@ -32,8 +32,7 @@ export default defineConfig({
         viewportWidth: 1920,
         experimentalStudio: true,
         experimentalRunAllSpecs: true,
-        experimentalMemoryManagement: false,
-        experimentalSessionAndOrigin: false,
+        experimentalMemoryManagement: true,
         testIsolation: false,
         retries: 1,
         specPattern: [

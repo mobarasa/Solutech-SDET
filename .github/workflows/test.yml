@@ -93,7 +93,7 @@ jobs:
       - name: Run Cypress tests using Cypress Docker image
         run: |
           # Run Cypress tests
-          docker run -v $(pwd):/e2e -w /e2e cypress/included:14.0.2 npx cypress run
+          docker run --network host -v $(pwd):/e2e -w /e2e cypress/included:14.0.2 npx cypress run
 
       - name: Run Cucumber tests
         run: |
@@ -108,7 +108,7 @@ jobs:
 
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: test-results
           path: |
