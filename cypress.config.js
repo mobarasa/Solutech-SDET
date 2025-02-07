@@ -22,6 +22,7 @@ export default defineConfig({
             inlineAssets: true,
             saveAllAttempts: true,
             overwrite: true,
+            reportDir: "cypress/reports/html",
         },
     },
     video: false,

@@ -111,11 +111,10 @@ jobs:
           cd docker
           ./stop.sh
 
-      - name: Upload test results
+      - name: Upload Cypress Test Results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-results
-          path: |
-            cypress/results/*.json
-            e2e/results/*.json
+          path: ${{ github.workspace }}/cypress/reports/html
+          retention-days: 30

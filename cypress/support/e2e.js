@@ -3,6 +3,8 @@
 // behavior that modifies Cypress.
 // ***********************************************************
 
+// Import commands.js using ES2015 syntax:
+import './commands'
 import 'cypress-mochawesome-reporter/register';
 import '@bahmutov/cypress-esbuild-preprocessor';
 
@@ -16,6 +18,4 @@ Cypress.on("test:after:run", (test, runnable) => {
     }
 });
 
-// Import commands.js using ES2015 syntax:
-import './commands'
 
