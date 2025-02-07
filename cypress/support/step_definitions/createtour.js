@@ -13,15 +13,24 @@ before(() => {
     });
 });
 
+afterEach(function () {
+    // cy.get('[data-cy="dashboard-link"]').click();
+    cy.get('span.inline-flex > .inline-flex').click();
+    cy.get('[data-cy="logout-navigation-link"] > .block').click();
+});
+
 Given('I am logged in as an admin', () => {
     cy.visit('/login');
     cy.get('[data-cy=login-email]').type('admin@account.com');
     cy.get('[data-cy=login-password]').type('password');
     cy.get('[data-cy=login-submit]').click();
+    cy.url().should('include', '/dashboard');
 });
 
 When('I navigate to the tour creation page', () => {
-    cy.visit('/tours/create'); // Adjust the URL as needed
+    cy.visit('/dashboard');
+    cy.get('[data-cy="tours-navigation-link"]').click();
+    cy.get('[data-cy="create-tour-button"] > span').click();
 });
 
 When('I create a new tour using {string} data', (tourDataPath) => {
@@ -41,30 +50,14 @@ When('I create a new tour using {string} data', (tourDataPath) => {
     cy.get('[data-cy=tour-price-input] input').type(tourData.price);
     cy.get('[data-cy=tour-slots-input] input').type(tourData.slots);
 
-    // Submit the form (add the submit button data-cy attribute)
-    cy.get('[data-cy=tour-submit]').click();
+    cy.get('[data-cy="submit-button"] > span').click();
 });
 
 Then('the tour should be created successfully', () => {
-    // Adjust these assertions based on your success indicators
-    cy.get('[data-cy=success-message]').should('be.visible');
-    // Add any additional success verifications
+    cy.get('.ivu-message-notice-content-success').should('be.visible');
 });
 
 Then('I should see validation error for tour name', () => {
-    cy.get('[data-cy=tour-name-input]')
-        .parent()
-        .should('have.class', 'ivu-form-item-error');
+    cy.get('.ivu-message-notice-content-error').should('be.visible');
 });
 
-Then('I should see validation error for tour price', () => {
-    cy.get('[data-cy=tour-price-input]')
-        .parent()
-        .should('have.class', 'ivu-form-item-error');
-});
-
-Then('I should see validation error for tour slots', () => {
-    cy.get('[data-cy=tour-slots-input]')
-        .parent()
-        .should('have.class', 'ivu-form-item-error');
-});

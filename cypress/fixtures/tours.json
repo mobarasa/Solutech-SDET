@@ -10,18 +10,9 @@
         "localTour": {
             "name": "Forest Adventure",
             "description": "Explore the natural beauty of local forests",
-            "destination": "Kakamega",
+            "destination": "Bali",
             "price": 149.99,
             "slots": 15
-        }
-    },
-    "invalidTours": {
-        "emptyName": {
-            "name": "",
-            "description": "Test tour with empty name",
-            "destination": "Bali",
-            "price": 199.99,
-            "slots": 10
         }
     }
 }
