@@ -59,12 +59,12 @@ jobs:
       - name: Run Cypress tests
         run: |
           cd docker
-          docker exec -it <container_name> npx cypress run  # Replace <container_name> with your container name
+          docker exec booking-php-fpm npx cypress run  # Replace with your container name if different
 
       - name: Run Cucumber tests
         run: |
           cd docker
-          docker exec -it <container_name> npm run test:cucumber  # Replace <container_name> with your container name
+          docker exec booking-php-fpm npm run test:cucumber  # Replace with your container name if different
 
       - name: Stop Docker containers
         if: always()
@@ -74,7 +74,7 @@ jobs:
 
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: test-results
           path: |

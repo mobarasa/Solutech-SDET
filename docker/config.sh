@@ -15,8 +15,7 @@ echo -e "${BLUE}==============================================${RESET}"
 echo -e "Running setup for composer, NPM and DB migrations' $now"
 echo ""
 
-
-
-docker exec -it booking-php-fpm chmod +x /setup/setup.sh
-docker exec -it booking-php-fpm chmod +x /docker/*.sh
-docker exec -it booking-php-fpm /setup/setup.sh
+# Run setup commands without -it flags
+docker exec booking-php-fpm chmod +x /setup/setup.sh
+docker exec booking-php-fpm chmod +x /docker/*.sh
+docker exec booking-php-fpm /setup/setup.sh
