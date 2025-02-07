@@ -26,6 +26,12 @@ services:
             - './docker/php-fpm/php-ini-overrides.ini:/etc/php/8.4/fpm/conf.d/99-overrides.ini'
             - './docker/php-fpm/php-ini-overrides.ini:/etc/php/8.4/cli/conf.d/99-overrides.ini'
             - './docker/setup:/setup'
+        healthcheck:  # ✅ Added health check
+        test: ["CMD", "php-fpm", "-t"]  # Check if php-fpm is working
+        interval: 5s
+        retries: 3
+        start_period: 10s
+        timeout: 5s
 
     mysql:
         container_name: booking-mysql
