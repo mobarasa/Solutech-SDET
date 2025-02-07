@@ -1,0 +1,28 @@
+version: '3.1'
+
+services:
+  app:
+    ports:
+      - '8000:80'
+    environment:
+      - APP_ENV=testing
+      - APP_DEBUG=true
+
+  php-fpm:
+    environment:
+      - APP_ENV=testing
+      - APP_DEBUG=true
+
+  mysql:
+    ports:
+      - '3306:3306'
+    environment:
+      - MYSQL_ROOT_PASSWORD=secret@santa
+      - MYSQL_DATABASE=booking
+      - MYSQL_USER=booking
+      - MYSQL_PASSWORD=secret@santa
+
+  mailhog:
+    ports:
+      - '8025:8025'
+      - '1025:1025'
