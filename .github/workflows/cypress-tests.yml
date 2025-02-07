@@ -48,11 +48,22 @@ jobs:
       - name: Set file permissions inside the container
         run: docker exec booking-php-fpm chown -R www-data:www-data /application/public
 
+      # - name: Install dependencies inside the container
+      #   run: |
+      #     docker exec booking-php-fpm composer install
+      #     docker exec booking-php-fpm npm install
+      #     docker exec booking-php-fpm npm run build
+
       - name: Install dependencies inside the container
         run: |
-          docker exec booking-php-fpm composer install
-          docker exec booking-php-fpm npm install
-          docker exec booking-php-fpm npm run build
+          # Switch to root user for npm install
+          docker exec -u root booking-php-fpm npm config set unsafe-perm true
+          docker exec -u root booking-php-fpm npm install --location=global npm@latest
+          docker exec -u root booking-php-fpm npm cache clean --force
+          docker exec -u root booking-php-fpm npm install
+          docker exec -u root booking-php-fpm npm run build
+          # Switch back to www-data for other operations
+          docker exec booking-php-fpm chown -R www-data:www-data /application/node_modules
 
       - name: Configure environment and database
         run: |
