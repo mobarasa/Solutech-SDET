@@ -50,6 +50,16 @@ jobs:
           cd docker
           docker-compose up -d --build
 
+      - name: Check app service logs
+        run: |
+          cd docker
+          docker-compose logs app
+
+      - name: Check php-fpm service status
+        run: |
+          cd docker
+          docker-compose ps
+
       - name: Wait for MySQL to be ready
         run: |
           cd docker
@@ -89,10 +99,22 @@ jobs:
       - name: Wait for application server to be ready
         run: |
           cd docker
+          retries=0
+          max_retries=60  # 60 retries * 5 seconds = 5 minutes
           while ! curl -s http://app:80 > /dev/null; do
+            if [ $retries -eq $max_retries ]; then
+              echo "Application server did not start within the expected time."
+              exit 1
+            fi
             echo "Waiting for application server to start..."
             sleep 5
+            retries=$((retries+1))
           done
+
+      - name: Check application server response
+        run: |
+          cd docker
+          curl -I http://app:80
 
       - name: Run Cypress tests using Docker Compose
         run: |
