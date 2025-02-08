@@ -95,14 +95,10 @@ jobs:
             sleep 5
           done
 
-      - name: Run Cypress tests using Cypress Docker image
+      - name: Run Cypress tests using Docker Compose
         run: |
-          docker run \
-            --network container:php-fpm \
-            -v $(pwd):/e2e \
-            -w /e2e \
-            cypress/included:14.0.2 \
-            npx cypress run --browser chrome --headless
+          cd docker
+          docker-compose up --exit-code-from cypress
 
       - name: List Cypress report directory
         run: ls -R ${{ github.workspace }}/cypress/reports

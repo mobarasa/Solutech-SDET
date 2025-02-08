@@ -69,5 +69,16 @@ services:
         depends_on:
             - php-fpm
             - mysql
+
+    cypress:
+        image: cypress/included:14.0.2
+        container_name: cypress
+        depends_on:
+        - php-fpm
+        volumes:
+        - .:/e2e
+        working_dir: /e2e
+        command: npx cypress run --browser headless
+
 volumes:
     booking-data:
