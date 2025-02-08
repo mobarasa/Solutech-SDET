@@ -102,7 +102,7 @@ jobs:
             -v $(pwd):/e2e \
             -w /e2e \
             cypress/included:14.0.2 \
-            npx cypress run --browser chrome
+            npx cypress run --browser chrome --headless
 
       - name: List Cypress report directory
         run: ls -R ${{ github.workspace }}/cypress/reports
