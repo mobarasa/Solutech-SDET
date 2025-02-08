@@ -98,7 +98,7 @@ jobs:
       - name: Run Cypress tests using Docker Compose
         run: |
           cd docker
-          docker-compose exec -T php-fpm npx cypress run --browser chrome --headed --verbose
+          docker-compose exec -T php-fpm npx cypress run --browser chrome --headed
 
       - name: List Cypress report directory
         run: ls -R ${{ github.workspace }}/cypress/reports
