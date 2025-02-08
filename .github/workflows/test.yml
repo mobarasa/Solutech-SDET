@@ -95,23 +95,13 @@ jobs:
             sleep 5
           done
 
-      - name: Run Cypress tests using Cypress Docker image
-        run: |
-          # Run Cypress tests
-          docker run --network host -v $(pwd):/e2e -w /e2e cypress/included:14.0.2 npx cypress run
-        working-directory: ${{ github.workspace }}
-
-      - name: Run Cucumber tests
+      - name: Run Cypress tests using Docker Compose
         run: |
           cd docker
-          docker exec booking-php-fpm npm run test:cucumber  # Replace with your container name if different
-        working-directory: ${{ github.workspace }}
+          docker-compose exec -T php-fpm npx cypress run --browser chrome --headed --verbose
 
-      - name: Stop Docker containers
-        if: always()
-        run: |
-          cd docker
-          ./stop.sh
+      - name: List Cypress report directory
+        run: ls -R ${{ github.workspace }}/cypress/reports
 
       - name: Upload Cypress Test Results
         if: always()
@@ -120,3 +110,9 @@ jobs:
           name: test-results
           path: ${{ github.workspace }}/cypress/reports/html
           retention-days: 30
+
+      - name: Stop Docker containers
+        if: always()
+        run: |
+          cd docker
+          ./stop.sh
