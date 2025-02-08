@@ -48,8 +48,7 @@ jobs:
       - name: Build and start Docker containers
         run: |
           cd docker
-          ./build.sh
-          ./start.sh
+          docker-compose up -d --build
 
       - name: Wait for MySQL to be ready
         run: |
@@ -90,7 +89,7 @@ jobs:
       - name: Wait for application server to be ready
         run: |
           cd docker
-          while ! curl -s http://127.0.0.1:8000 > /dev/null; do
+          while ! curl -s http://app:80 > /dev/null; do
             echo "Waiting for application server to start..."
             sleep 5
           done
@@ -115,4 +114,4 @@ jobs:
         if: always()
         run: |
           cd docker
-          ./stop.sh
+          docker-compose down
