@@ -78,7 +78,9 @@ services:
         volumes:
         - .:/e2e
         working_dir: /e2e
-        command: npx cypress run --browser headless
+        command: npx cypress run --browser chrome --headless
+        networks:
+        - default
 
 volumes:
     booking-data:
