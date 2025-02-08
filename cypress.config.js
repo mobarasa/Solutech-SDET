@@ -28,7 +28,7 @@ export default defineConfig({
     video: false,
     e2e: {
         // baseUrl: "http://127.0.0.1:8000/",
-        baseUrl: "http://app:80", 
+        baseUrl: "http://app:80",
         defaultCommandTimeout: 60000,
         viewportHeight: 1080,
         viewportWidth: 1920,
