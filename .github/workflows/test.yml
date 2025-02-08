@@ -99,11 +99,13 @@ jobs:
         run: |
           # Run Cypress tests
           docker run --network host -v $(pwd):/e2e -w /e2e cypress/included:14.0.2 npx cypress run
+        working-directory: ${{ github.workspace }}
 
       - name: Run Cucumber tests
         run: |
           cd docker
           docker exec booking-php-fpm npm run test:cucumber  # Replace with your container name if different
+        working-directory: ${{ github.workspace }}
 
       - name: Stop Docker containers
         if: always()

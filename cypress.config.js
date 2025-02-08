@@ -37,13 +37,12 @@ export default defineConfig({
         testIsolation: false,
         retries: 1,
         specPattern: [
-            'cypress/e2e/**/*.cy.{js,ts}',
+            'cypress/e2e/**/*.cy.{js}',
             'cypress/e2e/**/*.feature'
         ],
         stepDefinitions: [
             'cypress/e2e/features/**/*.steps.js',
-            'cypress/e2e/features/**/*.steps.ts',
-            'cypress/support/step_definitions/**/*.{js,ts}'
+            'cypress/support/step_definitions/**/*.{js}'
         ],
         async setupNodeEvents(on, config) {
             // For mochawesome reporter
